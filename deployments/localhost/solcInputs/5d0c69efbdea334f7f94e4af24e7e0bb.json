@@ -1,0 +1,35 @@
+{
+  "language": "Solidity",
+  "sources": {
+    "contracts/MultiSig.sol": {
+      "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.9;\n\ncontract MultiSig {\n    address[] public owners;\n    uint public transactionCount;\n    uint public required;\n\n    struct Transaction {\n        address payable destination;\n        uint value;\n        bool executed;\n        bytes data;\n    }\n\n    mapping(uint => Transaction) public transactions;\n    mapping(uint => mapping(address => bool)) public confirmations;\n\n    receive() payable external {\n        \n    }\n\n    function executeTransaction(uint transactionId) public {\n        require(isConfirmed(transactionId));\n        Transaction storage _tx = transactions[transactionId];\n        (bool success, ) = _tx.destination.call{ value: _tx.value }(_tx.data);\n        require(success);\n        _tx.executed = true;\n    }\n\n    function isConfirmed(uint transactionId) public view returns(bool) {\n        return getConfirmationsCount(transactionId) >= required;\n    }\n\n    function getConfirmationsCount(uint transactionId) public view returns(uint) {\n        uint count;\n        for(uint i = 0; i < owners.length; i++) {\n            if(confirmations[transactionId][owners[i]]) {\n                count++;\n            }\n        }\n        return count;\n    }\n\n    function isOwner(address addr) private view returns(bool) {\n        for(uint i = 0; i < owners.length; i++) {\n            if(owners[i] == addr) {\n                return true;\n            }\n        }\n        return false;\n    }\n\n    function submitTransaction(address payable dest, uint value,bytes calldata data) external {\n        uint id = addTransaction(dest, value,data);\n        confirmTransaction(id);\n    }\n\n    function confirmTransaction(uint transactionId) public {\n        require(isOwner(msg.sender));\n        confirmations[transactionId][msg.sender] = true;\n        if(isConfirmed(transactionId)) {\n            executeTransaction(transactionId);\n        }\n    }\n\n    function addTransaction(address payable destination, uint value,bytes calldata data) public returns(uint) {\n        transactions[transactionCount] = Transaction(destination, value, false,data);\n        transactionCount += 1;\n        return transactionCount - 1;\n    }\n\n    constructor(address[] memory _owners, uint _confirmations) {\n        require(_owners.length > 0);\n        require(_confirmations > 0);\n        require(_confirmations <= _owners.length);\n        owners = _owners;\n        required = _confirmations;\n    }\n}"
+    }
+  },
+  "settings": {
+    "optimizer": {
+      "enabled": true,
+      "runs": 200
+    },
+    "outputSelection": {
+      "*": {
+        "*": [
+          "abi",
+          "evm.bytecode",
+          "evm.deployedBytecode",
+          "evm.methodIdentifiers",
+          "metadata",
+          "devdoc",
+          "userdoc",
+          "storageLayout",
+          "evm.gasEstimates"
+        ],
+        "": [
+          "ast"
+        ]
+      }
+    },
+    "metadata": {
+      "useLiteralContent": true
+    }
+  }
+}
