@@ -1,4 +1,4 @@
-# MultiSig Wallet
+# [WIP] MultiSig Wallet
 
 The `MultiSig` wallet is a type of wallet where multiple parties must sign off on a transaction before it can be executed. This adds an extra layer of security for the wallet and is particularly useful for managing shared funds.
 
