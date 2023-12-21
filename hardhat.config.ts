@@ -20,6 +20,15 @@ const config: HardhatUserConfig = {
   solidity: {
     compilers: [
       {
+        version: "0.8.20",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200
+          }
+        }
+      },
+      {
         version: "0.8.18",
         settings: {
           optimizer: {
@@ -64,30 +73,6 @@ const config: HardhatUserConfig = {
     localhost: {
       url: "http://127.0.0.1:8545"
     },
-    /*mumbai: {
-      url: process.env.MUMBAI_RPC_URL,
-      chainId: 80001,
-      accounts: [`0x${process.env.DEPLOYER_PRIVATE_KEY1}`],
-    },
-     goerli: {
-      url: process.env.RPC_URL,
-      chainId: 5,
-      accounts: [`0x${process.env.DEPLOYER_PRIVATE_KEY1}`],
-    },
-    bscTestnet: {
-      url: process.env.BSC_TESTNET_URL,
-      chainId: 97,
-      gas: 2100000,
-      gasPrice: 12000000000,
-      accounts: [`0x${process.env.DEPLOYER_PRIVATE_KEY1}`],
-    },
-    bscMainnet: {
-      url: `https://bsc-dataseed.binance.org/`,
-      chainId: 56,
-      gas: 2100000,
-      gasPrice: 5500000000,
-      accounts: [`0x${process.env.DEPLOYER_PRIVATE_KEY1}`],
-    }, */
   },
 };
 

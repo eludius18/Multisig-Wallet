@@ -1,7 +1,6 @@
 import { ethers, run } from "hardhat";
 import { DeployFunction } from "hardhat-deploy/types";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
-import { constants } from "ethers";
 
 const delay = (ms: number) => {
   return new Promise((resolve) => setTimeout(resolve, ms));
