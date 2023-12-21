@@ -7,9 +7,9 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 
-/// @title Lottery Smart Contract using block timestamp/difficulty as a source of randomness.
+/// @title Token ERC20
 /// @author eludius18
-/// @notice This Smart Contract allow to enter ETH and takes prizes
+/// @notice This Smart Contract is a ERC20 Token
 contract TokenERC20 is
     Initializable,
     ERC20Upgradeable,

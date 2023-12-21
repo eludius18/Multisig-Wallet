@@ -24,15 +24,24 @@ const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const multisigContract = await deploy("MultiSig", {
     from: deployer,
     log: true,
-    args: [
-      owners,
-      confirmations
-    ],
+    proxy: {
+      proxyContract: "OpenZeppelinTransparentProxy",
+      execute: {
+        init: {
+          methodName: "initialize",
+          args: [
+            owners,
+            confirmations
+          ],
+        },
+      },
+    },
     waitConfirmations: 10,
   });
 
   console.log("MultiSig deployed at: ", multisigContract.address);
-  
+  await delay(5000);
+  const multisigImpl = await deployments.get("MultiSig_Implementation");
   
   /* await run("verify:verify", {
     address: multisigContract.address,
