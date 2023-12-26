@@ -4,17 +4,22 @@ pragma solidity ^0.8.14;
 import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 
 /// @title MultiSig Wallet
 /// @author eludius18
 /// @notice This Smart Contract is a MultiSig Wallet
 contract MultiSig is 
     ReentrancyGuardUpgradeable, 
-    OwnableUpgradeable 
+    OwnableUpgradeable, 
+    PausableUpgradeable 
 {
     address[] public owners;
     uint256 public transactionCount;
     uint256 public required;
+
+    event Submission(uint indexed transactionId);
+
 
     struct Transaction {
         address payable destination;
@@ -43,7 +48,15 @@ contract MultiSig is
         
     }
 
-    function executeTransaction(uint256 transactionId) public nonReentrant {
+    function pause() public onlyOwner {
+        _pause();
+    }
+
+    function unpause() public onlyOwner {
+        _unpause();
+    }
+
+    function executeTransaction(uint256 transactionId) public nonReentrant whenNotPaused() {
         require(isConfirmed(transactionId));
         Transaction storage _tx = transactions[transactionId];
         (bool success, ) = _tx.destination.call{ value: _tx.value }(_tx.data);
@@ -74,8 +87,9 @@ contract MultiSig is
         return false;
     }
 
-    function submitTransaction(address payable dest, uint256 value,bytes calldata data) external {
+    function submitTransaction(address payable dest, uint256 value,bytes calldata data) external whenNotPaused() {
         uint256 id = addTransaction(dest, value,data);
+        emit Submission(id);
         confirmTransaction(id);
     }
 
@@ -87,7 +101,7 @@ contract MultiSig is
         }
     }
 
-    function addTransaction(address payable destination, uint256 value,bytes calldata data) public returns(uint256) {
+    function addTransaction(address payable destination, uint256 value,bytes calldata data) public whenNotPaused() onlyOwner() returns(uint256) {
         transactions[transactionCount] = Transaction(destination, value, false,data);
         transactionCount += 1;
         return transactionCount - 1;

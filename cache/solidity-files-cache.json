@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/eladio.iofinnet/Desktop/Multisig-Wallet/contracts/MultiSig.sol": {
-      "lastModificationDate": 1703163234465,
-      "contentHash": "28ee025cc30ab523c7ca8815b94d169b",
+      "lastModificationDate": 1703598035749,
+      "contentHash": "b64818e50ea3dc45a14036f89d8f5db1",
       "sourceName": "contracts/MultiSig.sol",
       "solcConfig": {
         "version": "0.8.20",
@@ -39,7 +39,8 @@
       "imports": [
         "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol",
         "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol",
-        "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol"
+        "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol",
+        "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol"
       ],
       "versionPragmas": [
         "^0.8.14"
@@ -91,6 +92,52 @@
       ],
       "artifacts": [
         "ReentrancyGuardUpgradeable"
+      ]
+    },
+    "/Users/eladio.iofinnet/Desktop/Multisig-Wallet/node_modules/@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol": {
+      "lastModificationDate": 1703159041882,
+      "contentHash": "6a4b611a83035a19370ecd7eb445d4fc",
+      "sourceName": "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "../utils/ContextUpgradeable.sol",
+        "../proxy/utils/Initializable.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "PausableUpgradeable"
       ]
     },
     "/Users/eladio.iofinnet/Desktop/Multisig-Wallet/node_modules/@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol": {
@@ -409,7 +456,7 @@
       ]
     },
     "/Users/eladio.iofinnet/Desktop/Multisig-Wallet/contracts/TokenERC20.sol": {
-      "lastModificationDate": 1703162607121,
+      "lastModificationDate": 1703594808032,
       "contentHash": "998cf1c23dcca56254b398f79d286553",
       "sourceName": "contracts/TokenERC20.sol",
       "solcConfig": {
@@ -455,52 +502,6 @@
       ],
       "artifacts": [
         "TokenERC20"
-      ]
-    },
-    "/Users/eladio.iofinnet/Desktop/Multisig-Wallet/node_modules/@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol": {
-      "lastModificationDate": 1703159041882,
-      "contentHash": "6a4b611a83035a19370ecd7eb445d4fc",
-      "sourceName": "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol",
-      "solcConfig": {
-        "version": "0.8.20",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "evmVersion": "paris",
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "devdoc",
-                "userdoc",
-                "storageLayout",
-                "evm.gasEstimates"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "useLiteralContent": true
-          }
-        }
-      },
-      "imports": [
-        "../utils/ContextUpgradeable.sol",
-        "../proxy/utils/Initializable.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "PausableUpgradeable"
       ]
     }
   }

@@ -35,16 +35,24 @@ export interface MultiSigInterface extends Interface {
       | "isConfirmed"
       | "owner"
       | "owners"
+      | "pause"
+      | "paused"
       | "renounceOwnership"
       | "required"
       | "submitTransaction"
       | "transactionCount"
       | "transactions"
       | "transferOwnership"
+      | "unpause"
   ): FunctionFragment;
 
   getEvent(
-    nameOrSignatureOrTopic: "Initialized" | "OwnershipTransferred"
+    nameOrSignatureOrTopic:
+      | "Initialized"
+      | "OwnershipTransferred"
+      | "Paused"
+      | "Submission"
+      | "Unpaused"
   ): EventFragment;
 
   encodeFunctionData(
@@ -80,6 +88,8 @@ export interface MultiSigInterface extends Interface {
     functionFragment: "owners",
     values: [BigNumberish]
   ): string;
+  encodeFunctionData(functionFragment: "pause", values?: undefined): string;
+  encodeFunctionData(functionFragment: "paused", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
     values?: undefined
@@ -101,6 +111,7 @@ export interface MultiSigInterface extends Interface {
     functionFragment: "transferOwnership",
     values: [AddressLike]
   ): string;
+  encodeFunctionData(functionFragment: "unpause", values?: undefined): string;
 
   decodeFunctionResult(
     functionFragment: "addTransaction",
@@ -129,6 +140,8 @@ export interface MultiSigInterface extends Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owners", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
     data: BytesLike
@@ -150,6 +163,7 @@ export interface MultiSigInterface extends Interface {
     functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "unpause", data: BytesLike): Result;
 }
 
 export namespace InitializedEvent {
@@ -170,6 +184,42 @@ export namespace OwnershipTransferredEvent {
   export interface OutputObject {
     previousOwner: string;
     newOwner: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace PausedEvent {
+  export type InputTuple = [account: AddressLike];
+  export type OutputTuple = [account: string];
+  export interface OutputObject {
+    account: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace SubmissionEvent {
+  export type InputTuple = [transactionId: BigNumberish];
+  export type OutputTuple = [transactionId: bigint];
+  export interface OutputObject {
+    transactionId: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace UnpausedEvent {
+  export type InputTuple = [account: AddressLike];
+  export type OutputTuple = [account: string];
+  export interface OutputObject {
+    account: string;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -266,6 +316,10 @@ export interface MultiSig extends BaseContract {
 
   owners: TypedContractMethod<[arg0: BigNumberish], [string], "view">;
 
+  pause: TypedContractMethod<[], [void], "nonpayable">;
+
+  paused: TypedContractMethod<[], [boolean], "view">;
+
   renounceOwnership: TypedContractMethod<[], [void], "nonpayable">;
 
   required: TypedContractMethod<[], [bigint], "view">;
@@ -296,6 +350,8 @@ export interface MultiSig extends BaseContract {
     [void],
     "nonpayable"
   >;
+
+  unpause: TypedContractMethod<[], [void], "nonpayable">;
 
   getFunction<T extends ContractMethod = ContractMethod>(
     key: string | FunctionFragment
@@ -341,6 +397,12 @@ export interface MultiSig extends BaseContract {
     nameOrSignature: "owners"
   ): TypedContractMethod<[arg0: BigNumberish], [string], "view">;
   getFunction(
+    nameOrSignature: "pause"
+  ): TypedContractMethod<[], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "paused"
+  ): TypedContractMethod<[], [boolean], "view">;
+  getFunction(
     nameOrSignature: "renounceOwnership"
   ): TypedContractMethod<[], [void], "nonpayable">;
   getFunction(
@@ -373,6 +435,9 @@ export interface MultiSig extends BaseContract {
   getFunction(
     nameOrSignature: "transferOwnership"
   ): TypedContractMethod<[newOwner: AddressLike], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "unpause"
+  ): TypedContractMethod<[], [void], "nonpayable">;
 
   getEvent(
     key: "Initialized"
@@ -387,6 +452,27 @@ export interface MultiSig extends BaseContract {
     OwnershipTransferredEvent.InputTuple,
     OwnershipTransferredEvent.OutputTuple,
     OwnershipTransferredEvent.OutputObject
+  >;
+  getEvent(
+    key: "Paused"
+  ): TypedContractEvent<
+    PausedEvent.InputTuple,
+    PausedEvent.OutputTuple,
+    PausedEvent.OutputObject
+  >;
+  getEvent(
+    key: "Submission"
+  ): TypedContractEvent<
+    SubmissionEvent.InputTuple,
+    SubmissionEvent.OutputTuple,
+    SubmissionEvent.OutputObject
+  >;
+  getEvent(
+    key: "Unpaused"
+  ): TypedContractEvent<
+    UnpausedEvent.InputTuple,
+    UnpausedEvent.OutputTuple,
+    UnpausedEvent.OutputObject
   >;
 
   filters: {
@@ -410,6 +496,39 @@ export interface MultiSig extends BaseContract {
       OwnershipTransferredEvent.InputTuple,
       OwnershipTransferredEvent.OutputTuple,
       OwnershipTransferredEvent.OutputObject
+    >;
+
+    "Paused(address)": TypedContractEvent<
+      PausedEvent.InputTuple,
+      PausedEvent.OutputTuple,
+      PausedEvent.OutputObject
+    >;
+    Paused: TypedContractEvent<
+      PausedEvent.InputTuple,
+      PausedEvent.OutputTuple,
+      PausedEvent.OutputObject
+    >;
+
+    "Submission(uint256)": TypedContractEvent<
+      SubmissionEvent.InputTuple,
+      SubmissionEvent.OutputTuple,
+      SubmissionEvent.OutputObject
+    >;
+    Submission: TypedContractEvent<
+      SubmissionEvent.InputTuple,
+      SubmissionEvent.OutputTuple,
+      SubmissionEvent.OutputObject
+    >;
+
+    "Unpaused(address)": TypedContractEvent<
+      UnpausedEvent.InputTuple,
+      UnpausedEvent.OutputTuple,
+      UnpausedEvent.OutputObject
+    >;
+    Unpaused: TypedContractEvent<
+      UnpausedEvent.InputTuple,
+      UnpausedEvent.OutputTuple,
+      UnpausedEvent.OutputObject
     >;
   };
 }
