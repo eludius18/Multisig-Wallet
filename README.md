@@ -73,6 +73,7 @@ The project uses Hardhat as a development environment for compilation, testing, 
 
     ```
     npx hardhat deploy --network localhost --tags TokenERC20
+    npx hardhat test --network localhost
     ```
 
 ## Testing
