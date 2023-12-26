@@ -79,6 +79,6 @@ The project uses Hardhat as a development environment for compilation, testing, 
 
 The project includes a suite of tests that you can run to verify the functionality of the contracts. To run the tests, open a new terminal and run:
 
-    ```
-    npx hardhat test --network localhost
-    ```
+        ```
+        npx hardhat test --network localhost
+        ```
